@@ -25,6 +25,10 @@
  */
 
 #include "motion.h"
+
+#if ENABLED(SDSUPPORT)
+  #include "../sd/cardreader.h" // BrailleRAP SG: abort SD job when paper does not load
+#endif
 #include "endstops.h"
 #include "stepper.h"
 #include "planner.h"
@@ -2362,6 +2366,19 @@ void homeaxis_paperload (const AxisEnum axis)
       #endif
   }
   //endstops.enable(true);
+
+  // BrailleRAP SG: if the paper sensor never changed within PAPER_LOADING_MAX_LOAD_TRAVEL,
+  // there is no sheet (or it jammed). Report it and cancel the SD job instead of continuing to
+  // homeaxis(), whose failed homing move would kill() the firmware and need a board reset.
+  if (READ(Y_MIN_PIN) != Y_MIN_ENDSTOP_INVERTING) {
+    SERIAL_ERROR_MSG("Paper not loaded");
+    set_axis_never_homed(axis);
+    #if ENABLED(SDSUPPORT)
+      if (IS_SD_PRINTING()) card.abortFilePrintSoon();
+    #endif
+    return;
+  }
+
   if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("<<< homeaxis_paperload(", AS_CHAR(AXIS_CHAR(axis)), ")");
   homeaxis(axis);
     

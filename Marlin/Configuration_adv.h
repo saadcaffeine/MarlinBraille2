@@ -1498,7 +1498,10 @@
 
   //#define MEDIA_MENU_AT_TOP               // Force the media menu to be listed on the top of the main menu
 
-  #define EVENT_GCODE_SD_ABORT "G28XY"      // G-code to run on SD Abort Print (e.g., "G28XY" or "G27")
+  // BrailleRAP SG: "G28XY" homed Y on cancel, which on this machine means paper loading
+  // (up to PAPER_LOADING_MAX_LOAD_TRAVEL, Marlin blocked) and, with no sheet, a kill().
+  // Park the carriage and release the motors instead.
+  #define EVENT_GCODE_SD_ABORT "G28X\nM84" // G-code to run on SD Abort Print (e.g., "G28XY" or "G27")
 
   #if ENABLED(PRINTER_EVENT_LEDS)
     #define PE_LEDS_COMPLETED_TIME  (30*60) // (seconds) Time to keep the LED "done" color before restoring normal illumination

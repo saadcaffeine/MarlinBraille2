@@ -34,6 +34,10 @@
 #include "HAL/shared/esp_wifi.h"
 #include "HAL/shared/cpu_exception/exception_hook.h"
 
+#if ENABLED(BRAILLERAP_SELFTEST) && defined(ARDUINO_ARCH_ESP32)
+  #include <rom/rtc.h> // rtc_get_reset_reason(), POWERON_RESET
+#endif
+
 #ifdef ARDUINO
   #include <pins_arduino.h>
 #endif
@@ -1644,6 +1648,14 @@ void setup() {
   #endif
 
   marlin_state = MF_RUNNING;
+
+  // BrailleRAP SG: power-on self test, skipped after software restarts (see Configuration.h)
+  #if ENABLED(BRAILLERAP_SELFTEST) && defined(ARDUINO_ARCH_ESP32)
+    if (rtc_get_reset_reason(0) == POWERON_RESET) {
+      SERIAL_ECHO_MSG("BrailleRAP power-on self test");
+      queue.inject(F(BRAILLERAP_SELFTEST_GCODE));
+    }
+  #endif
 
   SETUP_LOG("setup() completed.");
 

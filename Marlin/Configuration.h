@@ -3347,6 +3347,14 @@
 #define PAPER_LOADING_MAX_LOAD_TRAVEL 430
 #define PAPER_LOADING_LOAD_TRAVEL 25
 
+// BrailleRAP SG power-on self test (ESP32 boards): small X and Y wiggle, then two solenoid taps.
+// Runs only after power-on, the reset button or a USB auto-reset (ESP32 POWERON_RESET). It never
+// runs after a software restart (web e-stop, "Restart embosser", [ESP444]RESTART), so an
+// emergency stop can't be followed by motion. Positive moves first, so a carriage resting on its
+// endstop moves away from it. Comment out BRAILLERAP_SELFTEST to disable.
+#define BRAILLERAP_SELFTEST
+#define BRAILLERAP_SELFTEST_GCODE "M118 BR:SELFTEST\nG91\nG1 X5 F3000\nG1 X-5\nG1 Y3 F1500\nG1 Y-3\nG90\nM3 S1\nG4 P200\nM3 S1\nM84"
+
 #if BRAILLERAP_DISABLE_SOLENOID
 #define SPINDLE_LASER_PWM_POWERON 0
 #else

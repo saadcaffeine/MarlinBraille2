@@ -1096,7 +1096,10 @@
 
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
 #define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
+// BrailleRAP SG: the Y endstop is the paper sensor. homeaxis_paperload() feeds +Y while it reads
+// "triggered" and then homes -Y back to "triggered", so "triggered" must mean NO paper at the lever.
+// Our switch is wired C+NO (closed = paper), so the logic is not inverted.
+#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define I_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define J_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.

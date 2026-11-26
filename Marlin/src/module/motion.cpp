@@ -2380,8 +2380,29 @@ void homeaxis_paperload (const AxisEnum axis)
   }
 
   if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("<<< homeaxis_paperload(", AS_CHAR(AXIS_CHAR(axis)), ")");
+
+  // BrailleRAP SG: homing to the paper edge can fail if the sensor glitches part-way (the fast
+  // move stops early, then the 2x bump re-approach never reaches the edge). Stock Marlin would
+  // kill() here, and on the ESP32 the halt message never reaches the WiFi UI (ESP3D only flushes
+  // from idle()), so the embosser just goes silent. Report it and cancel the SD job instead.
+  #if ENABLED(VALIDATE_HOMING_ENDSTOPS)
+    endstops.homing_failed = false;
+    endstops.soft_homing_fail = true;
+  #endif
   homeaxis(axis);
-    
+  #if ENABLED(VALIDATE_HOMING_ENDSTOPS)
+    endstops.soft_homing_fail = false;
+    if (endstops.homing_failed) {
+      endstops.homing_failed = false;
+      SERIAL_ERROR_MSG("Paper homing failed");
+      set_axis_never_homed(axis);
+      #if ENABLED(SDSUPPORT)
+        if (IS_SD_PRINTING()) card.abortFilePrintSoon();
+      #endif
+      return;
+    }
+  #endif
+
 } // homeaxis_paperload
 #endif
 

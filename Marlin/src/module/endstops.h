@@ -219,6 +219,9 @@ class Endstops {
     #if ENABLED(VALIDATE_HOMING_ENDSTOPS)
       // If the last move failed to trigger an endstop, call kill
       static void validate_homing_move();
+      // BrailleRAP SG: while soft_homing_fail is set, a failed homing move sets homing_failed
+      // instead of calling kill(), so the caller can report it and abort the job.
+      static bool soft_homing_fail, homing_failed;
     #else
       FORCE_INLINE static void validate_homing_move() { hit_on_purpose(); }
     #endif

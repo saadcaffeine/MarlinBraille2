@@ -1096,7 +1096,10 @@
 
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
 #define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
+// BrailleRAP SG: the Y endstop is the paper sensor. homeaxis_paperload() feeds +Y while it reads
+// "triggered" and then homes -Y back to "triggered", so "triggered" must mean NO paper at the lever.
+// Our switch is wired C+NO (closed = paper), so the logic is not inverted.
+#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define I_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define J_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
@@ -1634,7 +1637,7 @@
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 #define INVERT_X_DIR true
-#define INVERT_Y_DIR true
+#define INVERT_Y_DIR false  // BrailleRAP SG: paper feed motor ran backwards with true
 #define INVERT_Z_DIR false
 //#define INVERT_I_DIR false
 //#define INVERT_J_DIR false
@@ -2449,7 +2452,7 @@
  * SD Card support is disabled by default. If your controller has an SD slot,
  * you must uncomment the following option or it won't work.
  */
-//#define SDSUPPORT
+#define SDSUPPORT
 
 /**
  * SD CARD: ENABLE CRC
@@ -3346,6 +3349,14 @@
 #define PAPER_LOADING_HOME_Y  1
 #define PAPER_LOADING_MAX_LOAD_TRAVEL 430
 #define PAPER_LOADING_LOAD_TRAVEL 25
+
+// BrailleRAP SG power-on self test (ESP32 boards): small X and Y wiggle, then two solenoid taps.
+// Runs only after power-on, the reset button or a USB auto-reset (ESP32 POWERON_RESET). It never
+// runs after a software restart (web e-stop, "Restart embosser", [ESP444]RESTART), so an
+// emergency stop can't be followed by motion. Positive moves first, so a carriage resting on its
+// endstop moves away from it. Comment out BRAILLERAP_SELFTEST to disable.
+#define BRAILLERAP_SELFTEST
+#define BRAILLERAP_SELFTEST_GCODE "M118 BR:SELFTEST\nG91\nG1 X5 F3000\nG1 X-5\nG1 Y3 F1500\nG1 Y-3\nG90\nM3 S1\nG4 P200\nM3 S1\nM84"
 
 #if BRAILLERAP_DISABLE_SOLENOID
 #define SPINDLE_LASER_PWM_POWERON 0

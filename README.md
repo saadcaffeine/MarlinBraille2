@@ -7,6 +7,20 @@ MarlinBraille is a specialized version of Marlin firmware (https://github.com/Ma
 you will find the associated BrailleRAP configuration [here] (https://github.com/braillerap/MarlinBraille2Configuration)
 
 
+## BrailleRAP SG fork (MKS TinyBee, ESP3D WiFi)
+
+This fork's `xl-sg` branches carry the configuration for the Singapore BrailleRAP XL: an **MKS TinyBee v1.0** (ESP32) with TMC2209 drivers, **ESP3D WiFi** and **SD-card printing**. The first stable version is tagged [`xl-sg-v1.0.0`](https://github.com/saadcaffeine/MarlinBraille2/releases/tag/xl-sg-v1.0.0). The main differences from upstream:
+
+- ESP3D WiFi re-enabled, with the AsyncTCP / ESP Async WebServer versions pinned so it builds on `espressif32@2.1.0`
+- SD-card support, so WiFi hosts can upload a job and start it with `M23` and `M24`
+- Y steps/mm set to 43.5 (`87/2` was integer division) and the paper sensor polarity fixed
+- "Paper not loaded" cancels the job instead of halting the board, and cancel parks X instead of homing Y
+- A power-on self test (X/Y wiggle and two solenoid taps), skipped after software restarts
+
+**Optional on-device interface:** [BrailleRapSGUI](https://github.com/saadcaffeine/BrailleRapSGUI) is a web page served from the embosser itself. Upload its `braille.html.gz` to the ESP3D flash, then open `http://192.168.0.1/braille.html` from any phone or laptop on the embosser's WiFi. You can type English Braille (UEB grade 1), preview it, print over WiFi with progress and status lights, cancel, or emergency-stop. Desktop tools like AccessBrailleRAP and DesktopBrailleRAP keep working over USB as before.
+
+Build with `pio run -e mks_tinybee -t clean` before `pio run -e mks_tinybee -t upload`. ESP3DLib reads Marlin's configuration through a computed `#include`, so without a clean build it can silently keep old settings. The wiring and setup notes are in [BrailleRap-SG](https://github.com/saadcaffeine/BrailleRap-SG/tree/master/MarlinBraille2-TinyBee-XL).
+
 ### Supported Platforms
 
   Platform|MCU|Example Boards

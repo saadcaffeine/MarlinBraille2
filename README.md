@@ -9,7 +9,7 @@ you will find the associated BrailleRAP configuration [here] (https://github.com
 
 ## BrailleRAP SG fork (MKS TinyBee, ESP3D WiFi)
 
-This fork's `xl-sg` branches carry the configuration for the Singapore BrailleRAP XL: an **MKS TinyBee v1.0** (ESP32) with TMC2209 drivers, **ESP3D WiFi** and **SD-card printing**. The first stable version is tagged [`xl-sg-v1.0.0`](https://github.com/saadcaffeine/MarlinBraille2/releases/tag/xl-sg-v1.0.0). The main differences from upstream:
+This fork's `xl-sg` branches carry the configuration for the [Singapore BrailleRAP XL](https://saadcaffeine.github.io/BrailleRap-SG/): an **MKS TinyBee v1.0** (ESP32) with TMC2209 drivers, **ESP3D WiFi** and **SD-card printing**. The first stable version is tagged [`xl-sg-v1.0.0`](https://github.com/saadcaffeine/MarlinBraille2/releases/tag/xl-sg-v1.0.0). The main differences from upstream:
 
 - ESP3D WiFi re-enabled, with the AsyncTCP / ESP Async WebServer versions pinned so it builds on `espressif32@2.1.0`
 - SD-card support, so WiFi hosts can upload a job and start it with `M23` and `M24`

@@ -3349,6 +3349,11 @@
 #define PAPER_LOADING_HOME_Y  1
 #define PAPER_LOADING_MAX_LOAD_TRAVEL 430
 #define PAPER_LOADING_LOAD_TRAVEL 25
+// BrailleRAP SG: distance (mm) from the paper sensor lever to the embossing needle, along Y.
+// After G28 Y the sheet's top edge is at the lever; the firmware then feeds this much more and
+// calls that Y=0, so Y=0 is the top edge at the needle. Positive = feed further in (+Y).
+// Measure: G28 X, G28 Y, G1 X100 Y30 F3000, M3 S1 -> offset = 30 - (top edge to dot, mm).
+#define PAPER_LOADING_TOP_OFFSET 0
 
 // BrailleRAP SG power-on self test (ESP32 boards): small X and Y wiggle, then two solenoid taps.
 // Runs only after power-on, the reset button or a USB auto-reset (ESP32 POWERON_RESET). It never

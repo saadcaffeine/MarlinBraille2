@@ -2403,6 +2403,20 @@ void homeaxis_paperload (const AxisEnum axis)
     }
   #endif
 
+  // BrailleRAP SG: the sensor lever is not on the needle line. Feed the sheet on until its top
+  // edge is at the needle and make that Y=0 (see PAPER_LOADING_TOP_OFFSET in Configuration.h).
+  #if defined(PAPER_LOADING_TOP_OFFSET)
+    if (PAPER_LOADING_TOP_OFFSET != 0) {
+      endstops.enable(false);                   // a negative offset moves towards the sensor
+      current_position.y += PAPER_LOADING_TOP_OFFSET;
+      line_to_current_position(homing_feedrate(Y_AXIS));
+      planner.synchronize();
+      endstops.enable(true);
+      set_axis_is_at_home(Y_AXIS);
+      sync_plan_position();
+    }
+  #endif
+
 } // homeaxis_paperload
 #endif
 

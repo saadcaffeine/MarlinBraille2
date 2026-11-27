@@ -1636,7 +1636,7 @@
 // @section machine
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
-#define INVERT_X_DIR false  // BrailleRAP SG: X motor runs reversed vs stock (coil-pair swap); X switch at the left (X motor) end
+#define INVERT_X_DIR false  // BrailleRAP SG: X motor runs reversed vs stock (coil-pair swap); X switch at the left end (paper-sensor side, opposite the X motor)
 #define INVERT_Y_DIR false  // BrailleRAP SG: paper feed motor ran backwards with true
 #define INVERT_Z_DIR false
 //#define INVERT_I_DIR false
